@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Courses</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <h2>🎓 Micro MBA</h2>
+        <a href="{{ url_for('dashboard') }}">🏠 Dashboard</a>
+        <a href="{{ url_for('courses') }}">📚 Courses</a>
+        <a href="{{ url_for('logout') }}">🚪 Logout</a>
+    </aside>
+
+    <main class="main">
+
+        <section class="welcome-card">
+            <div>
+                <p class="small-label">Course Library</p>
+                <h1>Micro MBA Courses</h1>
+                <p>Access module content, videos, resources and quiz actions.</p>
+            </div>
+        </section>
+
+        <section class="course-grid">
+
+            {% for module in modules %}
+            <div class="course-card">
+                <h3>{{ module.name }}</h3>
+
+                <p><strong>Progress:</strong> {{ module.score }}%</p>
+                <p><strong>Status:</strong> {{ module.status }}</p>
+                <p><strong>Priority:</strong> {{ module.priority }}</p>
+
+                <div class="module-progress">
+                    <div class="module-fill" style="width: {{ module.score }}%;"></div>
+                </div>
+
+                <a href="{{ module.video }}" target="_blank">▶ Watch Video</a>
+                <a href="{{ module.course }}" target="_blank">📚 Open Course Page</a>
+                <a href="{{ url_for('dashboard') }}#actions">📝 Take Quiz / Update Score</a>
+            </div>
+            {% endfor %}
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

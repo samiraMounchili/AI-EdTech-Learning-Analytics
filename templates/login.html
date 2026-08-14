@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Micro MBA Learning Platform</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <div class="logo">
+        🎓
+    </div>
+
+    <h1>AI-Powered Personalised Learning Platform</h1>
+
+    <h2>Micro MBA Learning Analytics Demo</h2>
+
+    <form method="POST">
+
+        <input
+            type="email"
+            name="email"
+            placeholder="University Email"
+            required
+        >
+
+        <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            required
+        >
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+    <p class="footer">
+        Academic Prototype • Synthetic Data • Learning Analytics
+    </p>
+
+</div>
+
+</body>
+</html>

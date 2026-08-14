@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Learning Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+        <h2>🚀 LearnAI</h2>
+<p class="brand-subtitle">
+    Personalised Learning Platform
+</p>
+        <a href="{{ url_for('dashboard') }}">🏠 Dashboard</a>
+        <a href="{{ url_for('courses') }}">📚 Courses</a>
+        <a href="#analytics">📊 Analytics</a>
+        <a href="#actions">🎯 Actions</a>
+        <a href="#assistant">🤖 AI Assistant</a>
+        <a href="{{ url_for('logout') }}">🚪 Logout</a>
+    </aside>
+
+    <main class="main">
+
+        <section class="welcome-card">
+            <div>
+                <p class="small-label">Welcome back 👋</p>
+                <h1>Demo Learner</h1>
+                <p>Continue your personalised Micro MBA learning journey.</p>
+
+<div class="welcome-insights">
+
+    <div>
+        <strong>🏆 Strongest Module</strong><br>
+        {{ strongest_module.name }} ({{ strongest_module.score }}%)
+    </div>
+
+    <div>
+        <strong>🎯 Focus Module</strong><br>
+        {{ weakest_module.name }} ({{ weakest_module.score }}%)
+    </div>
+
+    <div>
+        <strong>⚠ Current Risk</strong><br>
+        {{ risk }}
+    </div>
+
+</div>
+
+                <div class="progress-text">
+                    <span>Overall Course Progress</span>
+                    <strong>{{ progress }}%</strong>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: {{ progress }}%;"></div>
+                </div>
+            </div>
+            <div class="learning-message">
+
+    {% if progress >= 80 %}
+        🎉 Excellent progress! You are on track to complete the programme successfully.
+    {% elif progress >= 60 %}
+        📈 Good progress. Continue focusing on your weakest module.
+    {% else %}
+        ⚠ Additional study is recommended to improve completion outcomes.
+    {% endif %}
+
+</div>
+
+           <div class="profile-card">
+
+    <div class="avatar">👩‍🎓</div>
+
+    <h3>Demo Learner</h3>
+
+    <div class="profile-item">
+        <strong>Learner ID</strong>
+        <span>MBA-DEMO-001</span>
+    </div>
+
+    <div class="profile-item">
+        <strong>Programme</strong>
+        <span>Micro MBA</span>
+    </div>
+
+    <div class="profile-item">
+        <strong>Status</strong>
+        <span>Active Learner</span>
+    </div>
+
+    <div class="profile-item">
+        <strong>Risk Level</strong>
+        <span>{{ risk }}</span>
+    </div>
+
+    <div class="profile-item">
+        <strong>Completion</strong>
+        <span>{{ probability|round(1) }}%</span>
+    </div>
+
+</div>
+        </section>
+
+        <section class="stats-row">
+            <div class="stat-box">
+                <span>Questions Solved</span>
+                <h2>{{ stats.questions_solved }}</h2>
+            </div>
+
+            <div class="stat-box">
+                <span>Courses Completed</span>
+                <h2>{{ stats.courses_completed }}</h2>
+            </div>
+
+            <div class="stat-box">
+                <span>Certificates</span>
+                <h2>{{ stats.certificates }}</h2>
+            </div>
+
+            <div class="stat-box">
+                <span>Hours Studied</span>
+                <h2>{{ stats.hours_studied }}</h2>
+            </div>
+        </section>
+
+        <section class="grid-2">
+
+            <div class="panel" id="analytics">
+                <h2>📊 Learning Analytics</h2>
+
+                <p><strong>Completion Probability:</strong> {{ probability }}%</p>
+                <p><strong>Risk Level:</strong> {{ risk }}</p>
+                <p><strong>Sessions Viewed:</strong> {{ learner.sessions_viewed }}/8</p>
+                <p><strong>Time Spent:</strong> {{ learner.time_spent_minutes }} minutes</p>
+                <p><strong>Moodle Logins:</strong> {{ learner.moodlet_logins }}</p>
+                <p><strong>Quiz Attempts:</strong> {{ learner.quiz_attempts }}</p>
+            </div>
+
+            <div class="panel" id="actions">
+                <h2>🎯 Learning Action Centre</h2>
+
+                <h3>{{ action_plan.title }}</h3>
+                <p>{{ action_plan.message }}</p>
+
+                <div class="action-box">
+                    <strong>Next Recommended Action:</strong>
+                    <p>{{ action_plan.action }}</p>
+                    <p><strong>Target:</strong> {{ action_plan.target }}</p>
+                </div>
+
+                {% if instant_feedback %}
+                <div class="feedback">
+                    <h3>⚡ Instant Feedback</h3>
+                    <p>{{ instant_feedback }}</p>
+                </div>
+                {% endif %}
+            </div>
+
+        </section>
+
+        <section class="panel">
+            <h2>📚 Module Progress</h2>
+
+            {% for module in modules %}
+            <div class="module-line">
+                <div class="module-header">
+                    <strong>{{ module.name }}</strong>
+                    <span>{{ module.score }}% · {{ module.status }}</span>
+                </div>
+
+                <div class="module-progress">
+                    <div class="module-fill" style="width: {{ module.score }}%;"></div>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+
+        <section class="panel">
+            <h2>⚡ Update Progress</h2>
+            <p class="muted">Change a module quiz score and see the dashboard adapt instantly.</p>
+
+            <form method="POST" class="form-grid">
+                <input type="hidden" name="action" value="update">
+
+                <label>Sessions Viewed</label>
+                <input type="number" name="sessions_viewed" value="{{ learner.sessions_viewed }}" min="0" max="8">
+
+                <label>Time Spent</label>
+                <input type="number" name="time_spent_minutes" value="{{ learner.time_spent_minutes }}" min="0">
+
+                <label>Moodle Logins</label>
+                <input type="number" name="moodlet_logins" value="{{ learner.moodlet_logins }}" min="0">
+
+                <label>Quiz Attempts</label>
+                <input type="number" name="quiz_attempts" value="{{ learner.quiz_attempts }}" min="0">
+
+                <label>Engagement Level</label>
+                <input type="number" name="engagement_level" value="{{ learner.engagement_level }}" min="1" max="10">
+
+                <label>Module</label>
+                <select name="module">
+                    {% for module in modules %}
+                    <option>{{ module.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <label>New Quiz Score</label>
+                <input type="number" name="new_score" min="0" max="100" placeholder="e.g. 85" required>
+
+                <button type="submit">Update and Generate Feedback</button>
+            </form>
+        </section>
+
+        <section class="panel">
+            <h2>🎥 Adaptive Learning Content</h2>
+
+            <div class="course-grid">
+                {% for module in weakest_modules %}
+                <div class="course-card">
+                    <h3>{{ module.name }}</h3>
+                    <p>{{ module.priority }}</p>
+                    <p>Score: {{ module.score }}%</p>
+                    <a href="{{ module.video }}" target="_blank">▶ Watch Video</a>
+                    <a href="{{ module.course }}" target="_blank">📚 Course Page</a>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+
+    </main>
+
+</div>
+
+<button class="chat-toggle" onclick="toggleChat()">🤖</button>
+
+<div class="chat-widget" id="chatWidget">
+
+    <h3>🤖 AI Assistant</h3>
+
+    <form method="POST">
+        <input type="hidden" name="action" value="chat">
+        <input type="text" name="question" placeholder="Ask what to study next..." required>
+        <button type="submit">Ask</button>
+    </form>
+
+    {% if chat_response %}
+    <div class="chat-reply">
+        {{ chat_response }}
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+function toggleChat(){
+    var chat = document.getElementById("chatWidget");
+    if(chat.style.display === "none" || chat.style.display === ""){
+        chat.style.display = "block";
+    }else{
+        chat.style.display = "none";
+    }
+}
+
+window.onload = function(){
+    var hasReply = "{{ 'yes' if chat_response else 'no' }}";
+    var chat = document.getElementById("chatWidget");
+
+    if(hasReply === "yes"){
+        chat.style.display = "block";
+    }
+}
+</script>
+
+</body>
+</html>
