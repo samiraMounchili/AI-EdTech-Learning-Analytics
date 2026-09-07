@@ -1,6 +1,6 @@
 ## Live Demo
 
-🚀 **[Try the AI EdTech Learning Analytics Demo](YOUR-RENDER-LINK)**
+Deployment coming soon.
 # AI EdTech Learning Analytics
 
 A Flask-based learning analytics prototype that combines **machine learning, learner progress analytics, personalised recommendations and a supportive chatbot** to demonstrate how short-course learners could receive more targeted support.
